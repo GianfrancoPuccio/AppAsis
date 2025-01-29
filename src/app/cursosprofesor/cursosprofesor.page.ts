@@ -2,16 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationExtras } from '@angular/router';
+import { ConsumoAPIService } from '../services/consumo-api.service';
 
 @Component({
-  selector: 'app-cursosalumno',
-  templateUrl: './cursosalumno.page.html',
-  styleUrls: ['./cursosalumno.page.scss'],
+  selector: 'app-cursosprofesor',
+  templateUrl: './cursosprofesor.page.html',
+  styleUrls: ['./cursosprofesor.page.scss'],
   standalone: true,
   imports: [IonicModule, CommonModule]
 })
-export class CursosalumnoPage implements OnInit {
+export class CursosprofesorPage implements OnInit {
   nombre: string = '';
+  message: string = '';
   
   cursos = [
     { id: 1, nombre: 'Programacion Web', codigo: 'PVC xxxx-xxx', seccion: '001D' },
@@ -19,11 +21,20 @@ export class CursosalumnoPage implements OnInit {
     { id: 3, nombre: 'Base de datos', codigo: 'PVC xxxx-xxx', seccion: '003D' }
   ];
 
-  constructor(private router: Router) {
-    this.nombre = this.router.getCurrentNavigation()?.extras.state?.['id'] || 'Alumno';
+  constructor(private  consumoAPI: ConsumoAPIService,private router: Router) {
+    this.nombre = this.router.getCurrentNavigation()?.extras.state?.['id'] || 'Profesor';
   }
-  ngOnInit(): void {
-    console.log('CursosalumnoPage initialized');
+
+  /// Metodo para mostrar
+  Mostrar() {
+    //this.presentAlert();
+    this.consumoAPI.getPost().subscribe((res) => {
+      this.message = '' + 'res[0].title';
+      console.log();
+    });
+  }
+  ngOnInit() { 
+    this.Mostrar();
   }
 
   verCurso(curso: any) {
@@ -34,7 +45,7 @@ export class CursosalumnoPage implements OnInit {
         seccion: curso.seccion
       }
     };
-    this.router.navigate(['/asistenciaalumno'], navigationExtras);
+    this.router.navigate(['/controlasistencia'], navigationExtras);
   }
 
   volverALogin() {
